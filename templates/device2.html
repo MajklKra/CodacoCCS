@@ -95,37 +95,42 @@
         }
 
         #c2{
-            background-color: #F5F5F5;
+            background-color: #F5F5F5; 
+            /* background-color: blue !important; */
             /* width: 80%; */
             /* height: 100vh; */
-            min-height: 100vh; /* Minimální výška */
+            min-height: 80vh; /* Minimální výška */
             height: auto; /* Výška se přizpůsobí podle obsahu */
             border-radius: 5px;
             overflow-x: auto;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: flex-start;
+            /* justify-content: center;
+            align-items: flex-start; */
 
-            position: relative;
+            padding-bottom: 0px;
 
+            /* position: relative; */
         }
 
-        #c2>p>a{
+         #c4>p>a{
             text-decoration: none;
-            padding-left: 10px;
+            /* padding-left: 10px; */
+            padding-right: 0px;
             color: blue; 
             /* position: absolute;
             top:30px;
             right: 50px; */
-        }
+        } 
 
-        #c2>p{
+        #c4>p{
+            /*
             position: absolute;
             top:30px;
             right: 50px; 
+            */
             /* color: blue; */
-            color: #7393B3;
+            color: #7393B3; 
         }
 
         .accordion 
@@ -211,36 +216,37 @@
             /* background-color: orange; */
             /*overflow-x: auto;
             box-sizing: border-box;*/
-            position: relative;
+            /* position: relative; */
         }
 
-        #c2>h4{
+        /* #c2>h4{
             margin-top: 50px;
             margin-bottom: 50px;
             padding-top: 50px;
-        }
+        } */
 
 
         #c3{
             background-color: #D3D3D3;
+            /* background-color: green; */
 
             display: flex;
             justify-content: center;
             align-content: center;
             flex-direction: column;
             text-align: center;
-            padding: 20px;
+            padding-left: 20px;
             border-radius: 5px;
 
             color:#696969;
 
-            position: absolute;
+            /* position: absolute;
             left: 50px;
-            top: 50px;
+            top: 50px; */
 
-            margin: 50px;
-        
+            /* margin: 50px; */
 
+            padding: 20px;
         }
 
         #c3>form{
@@ -252,13 +258,31 @@
             border:none;
 
             border-radius: 5px;
-            
         }
 
         #equ:focus{
             border: 2px solid blue;
         }
 
+        #c4{
+            /* background-color: red; */
+            /* width: 80%; */
+            /* height: 100vh; */
+            /* min-height: 20vh; */
+            border-radius: 5px;
+            overflow-x: auto;
+            display: flex;
+            flex-direction: row;
+            justify-content:space-between;
+            align-items: flex-start;
+            /* margin-top: 0px;
+            margin-left: 0px !important;
+            margin-right: 0px !important; */
+
+            margin-top: 50px;
+            margin-bottom: 50px;
+            width: 100% !important;
+        }
     
         @media screen and (max-width: 300px) 
         {
@@ -301,6 +325,11 @@
                 padding-top: 0px;
                 padding-bottom: 0px;
             } 
+
+            #c2>h4
+            {
+                margin: 50px auto;
+            }
     
         }
 
@@ -339,6 +368,11 @@
                 padding-top: 0px;
                 padding-bottom: 0px;
             } 
+
+            #c2>h4
+            {
+                margin: 50px auto;
+            }
         
         }
 
@@ -376,6 +410,11 @@
                 padding-bottom: 0px;
             } 
 
+            #c2>h4
+            {
+                margin: 50px auto;
+            }
+
         }
 
         @media screen and (min-width: 767px) and (max-width: 991px) 
@@ -388,6 +427,11 @@
                 /* background-color: green; */
                 background-color: #F5F5F5;
             }
+
+            #c2>h4
+            {
+                margin: 50px auto;
+            }
         }
 
         @media screen and (min-width: 992px) and (max-width: 1199px) 
@@ -399,6 +443,11 @@
             #c2{
                 /* background-color: brown; */
                 background-color: #F5F5F5;
+            }
+
+            #c2>h4
+            {
+                margin: 50px auto;
             }
 
         }
@@ -441,8 +490,8 @@
 <body>
 
     <div class="container-fluid">
-        <div class="row">
-            <div id="c1" class="col-12 col-md-4 col-lg-4 col-xl-4 col-xxl-2" >
+        <div class="row">     
+            <div id="c1" class="col-12 col-md-4 col-lg-4 col-xl-4 col-xxl-2">
                 <h1 style="color: white; margin: 50px 0px; text-align: center;">MS Server</h1>
 
                 <button class="accordion" style="font-size:large;">Struktura instituce</button>
@@ -489,15 +538,54 @@
 
             </div>
 
+            
+            <!-- <div id="c4" class="col-12 col-md-8 col-lg-8 col-xl-8 col-xxl-10">
+
+                
+            </div> -->
+
+            {% set data_dict = {} %}
+            {% for row in devices %}
+                {% set _ = data_dict.update({row[0]: row[1]}) %}
+            {% endfor %}
+
+            {% set data_dict2 = {} %}
+            {% for row in query %}
+                {% set _ = data_dict2.update({row[0]: row[1]}) %}
+            {% endfor %}
+
+
+
             <div id="c2" class="col-12 col-md-8 col-lg-8 col-xl-8 col-xxl-10">
 
-                <p>
+                <div id="c4"> 
+                    <div id="c3">
+                        <h5> <b>Výběr podle typu I/O prvku</b></h5> 
+                        <form action="{{ url_for('device2') }}" method="GET">
+                            <!-- <label for="devices">Vyber zařízení:</label> -->
+                            <select name="device" id="equ" onchange="this.form.submit()">
+                                <option value="">Vyberte zařízení 
+                                {% for key, value in data_dict.items() %}
+                                    <option value="{{key}}" {% if key == selected_device %}selected{% endif %}>{{ key }}</option>
+                                {% endfor %}
+                            </select>
+                        </form>
+                    </div>
+
+                    <p>
+                        <b>{{ formatted_time }} {{ current_time.strftime('%H:%M') }}   &nbsp&nbsp Uživatel: {{user.id}}</b> 
+                        &nbsp&nbsp <a href="/logout">Odhlášení</a>
+                    </p>
+                
+                </div>
+
+                <!-- <p>
                     <b>{{ formatted_time }} {{ current_time.strftime('%H:%M') }}   &nbsp&nbsp Uživatel: {{user.id}}</b> 
                     <a href="/logout">Odhlášení</a>
-                </p>
+                </p> -->
 
                 <!-- Vytvoření slovníku -->
-                {% set data_dict = {} %}
+                <!-- {% set data_dict = {} %}
                 {% for row in devices %}
                     {% set _ = data_dict.update({row[0]: row[1]}) %}
                 {% endfor %}
@@ -505,7 +593,7 @@
                 {% set data_dict2 = {} %}
                 {% for row in query %}
                     {% set _ = data_dict2.update({row[0]: row[1]}) %}
-                {% endfor %}
+                {% endfor %} -->
 
                 <!-- Iterace přes slovník -->
 
@@ -518,11 +606,11 @@
                 </div> -->
                 
 
-                <div id="c3">
+                <!-- <div id="c3">
 
-                       <h5> <b>Výběr podle typu I/O prvku</b></h5> 
+                    <h5> <b>Výběr podle typu I/O prvku</b></h5> 
 
-                       <!-- <label for="pet-select" style="padding-left: 20px; padding-top: 20px;">Choose a pet:</label>
+                     <label for="pet-select" style="padding-left: 20px; padding-top: 20px;">Choose a pet:</label>
                         <select name="pets" id="pet-select" style = "margin-right: 20px; margin-bottom: 20px;">
                             <option value="">--Please choose an option--</option>
                             <option value="dog">Dog</option>
@@ -531,15 +619,15 @@
                             <option value="parrot">Parrot</option>
                             <option value="spider">Spider</option>
                             <option value="goldfish">Goldfish</option>
-                        </select>  -->
+                        </select> 
 
-                        <!-- <select id="deviceSelect">
-                             Možnosti se naplní dynamicky 
-                        </select> -->
+                        <select id="deviceSelect">
+                            Možnosti se naplní dynamicky 
+                        </select>
 
 
                         <form action="{{ url_for('device2') }}" method="GET">
-                            <!-- <label for="devices">Vyber zařízení:</label> -->
+                            <label for="devices">Vyber zařízení:</label> 
                             <select name="device" id="equ" onchange="this.form.submit()">
                                 <option value="">Vyberte zařízení 
                                 {% for key, value in data_dict.items() %}
@@ -547,11 +635,11 @@
                                 {% endfor %}
                             </select>
                         </form>
-                </div>
+                </div> -->
 
                 <h4 style="color: #7393B3;" > <b>Hardware Diagnostika -> Výpis detekovaných prvků v síti</b></h4>
-              
-                 <!-- <table id="t1" class="table table-striped">          -->
+            
+                <!-- <table id="t1" class="table table-striped">          -->
                 <table id="t1"> 
                     <thead>
                         <tr>
@@ -584,13 +672,13 @@
                                 {% if messages %}
                                     <ul>
                                         {% for category, message in messages %}
-                                             <li class="{{ category }}">{{ message }}</li> 
-                                             <p>{{ message }}</p>
+                                            <li class="{{ category }}">{{ message }}</li> 
+                                            <p>{{ message }}</p>
                                         {% endfor %}
                                     </ul>
                                 {% endif %}
                 {% endwith %}  -->
-              
+            
             </div>
         </div>
     </div>
