@@ -10,10 +10,6 @@ from flask import session
 from datetime import datetime
 from babel.dates import format_datetime
 
-# MyName = "Michal"
-# MyPassword = "Ostrava"
-
-# Vytvoření instance Flask aplikace
 app = Flask(__name__)
 
 app.secret_key = secrets.token_hex(16)
@@ -170,28 +166,79 @@ def device():
         return f"Chyba připojení k databázi: {err}"
     
 
-@app.route("/device2")
+@app.route("/device2", methods=['GET'])
 @role_required('admin','user')
 def device2():
+
+    selected_device = request.args.get('device', '')  # Získání parametru 'device' z URL
+    flash(selected_device)
+
+    if selected_device == "":
+        s = """
+            SELECT DeviceTypeShortCut, MacAddressStr, IPAddressStr, LastActivity, RunTime, VersionString 
+            FROM HwIpDevicesAddrMem 
+            JOIN HwIpDevicesTypes ON HwIpDevicesTypes.DeviceTypeID = HwIpDevicesAddrMem.DeviceTypeID;
+        """
+    else:
+        s = f"""
+            SELECT DeviceTypeShortCut, MacAddressStr, IPAddressStr, LastActivity, RunTime, VersionString 
+            FROM HwIpDevicesAddrMem 
+            JOIN HwIpDevicesTypes ON HwIpDevicesTypes.DeviceTypeID = HwIpDevicesAddrMem.DeviceTypeID
+            WHERE DeviceTypeShortCut = '{selected_device}';
+        """
+
+    try:
+        # Připojení k databázi
+        with mysql.connector.connect(**db_config) as conn:
+            with conn.cursor() as cursor:
+                # Dotaz 1: Získání všech zařízení
+                query = """
+                        SELECT DeviceTypeShortCut, MacAddressStr, IPAddressStr, LastActivity, RunTime, VersionString
+                        FROM   HwIpDevicesAddrMem
+                        JOIN   HwIpDevicesTypes ON HwIpDevicesTypes.DeviceTypeID = HwIpDevicesAddrMem.DeviceTypeID;
+                        """
+                cursor.execute(query)
+                results = cursor.fetchall()
+
+                # Dotaz 2: Získání zařízení podle parametru
+                cursor.execute(s)
+                results2 = cursor.fetchall()
+
+        # Aktuální čas
+        current_time = datetime.now()
+        formatted_time = format_datetime(current_time, "EEEE d. MMMM yyyy", locale="cs")
+        formatted_time = formatted_time[0].upper() + formatted_time[1:]
+
+        # Předání dat do šablony
+        return render_template(
+            "device2.html",
+            devices=results,
+            user=current_user,
+            current_time=current_time,
+            formatted_time=formatted_time,
+            query=results2,
+            selected_device = selected_device
+        )
+
+    except mysql.connector.Error as err:
+        # Zpracování chyby připojení
+        return f"Chyba připojení k databázi: {err}"
+    
+
+@app.route('/test')
+@role_required('admin','user')
+def test():
     try:
         # Připojení k MySQL databázi
         conn = mysql.connector.connect(**db_config)
         cursor = conn.cursor()
 
-        # Provedení SQL dotazu
-        query = "SELECT MacAddressStr,IPAddressStr, LastActivity, RunTime, VersionString FROM HwIpDevicesAddrMem;"
-
         query2 = """
-                 SELECT DeviceTypeShortCut, MacAddressStr, IPAddressStr, LastActivity, RunTime, VersionString
+                 SELECT DeviceTypeShortCut, HwIpDevicesTypes.DeviceTypeID, MacAddressStr, IPAddressStr, LastActivity, RunTime, VersionString
                  FROM   HwIpDevicesAddrMem
                  JOIN   HwIpDevicesTypes ON HwIpDevicesTypes.DeviceTypeID = HwIpDevicesAddrMem.DeviceTypeID;
                  """
         
-        query3 = """
-                 SELECT *
-                 FROM   HwIpDevicesTypes;
-                 """
-
         cursor.execute(query2)
         results = cursor.fetchall()
 
@@ -199,19 +246,12 @@ def device2():
         cursor.close()
         conn.close()
 
-        current_time = datetime.now()
-        formatted_time = format_datetime(current_time, "EEEE d. MMMM yyyy", locale="cs")
-        formatted_time = formatted_time[0].upper() + formatted_time[1:]
-
-        # Předání dat do šablony
-        return render_template("device2.html", devices=results,user=current_user, current_time=current_time, formatted_time=formatted_time)
-
+        return render_template("test.html", devices=results)
+    
     except mysql.connector.Error as err:
         # Zpracování chyby připojení
         return f"Chyba připojení k databázi: {err}"
-
-
-
+    
 # Spuštění Flask serveru
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)

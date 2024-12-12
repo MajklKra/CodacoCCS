@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testovací stránka</title>
+
+    <style>
+        
+        body
+        {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-content: center;
+            text-align:center;     
+        }
+
+        #c1{
+
+            padding-top: 50px;
+            padding-left: 100px;
+
+        }
+    </style>
+</head>
+
+<body>
+    <h1 style="color: red; text-align: center; padding-top: 50px;"> Vítej na testovací stránce </h1>
+
+    <!-- Vytvoření slovníku -->
+    {% set data_dict = {} %}
+    {% for row in devices %}
+        {% set _ = data_dict.update({row[0]: row[1]}) %}
+    {% endfor %}
+
+    <!-- Iterace přes slovník -->
+    <ul>
+        {% for key, value in data_dict.items() %}
+            
+               <p style="margin-top: 0px; padding-top: 0px; margin-bottom: 0px; padding-bottom: 0px;"> klíč <strong>{{ key }}</strong>: hodnota {{ value }}  </p>
+            
+        {% endfor %}
+    </ul>
+
+    <div id = "c1">
+        <!-- <label for="pet-select">Choose a device:</label>
+        <select id="deviceSelect">
+            <option value="">--Vyberte zarizeni--
+
+            {% for key, value in data_dict.items() %}
+                <option value="{{ value }}">{{ key }}</option>
+            {% endfor %}
+
+        </select> -->
+
+
+        <form action="{{ url_for('device2') }}" method="GET">
+            <label for="devices">Vyber zařízení:</label>
+            <select name="device" id="equ" onchange="this.form.submit()">
+                <option value="">--Vyberte zarizeni--
+                {% for key, value in data_dict.items() %}
+                    <option value="{{key}}" {% if key == selected_device %}selected{% endif %}>{{ key }}</option>
+                {% endfor %}
+            </select>
+        </form>
+    </div>
+
+
+
+
+
+    <!-- <script>
+        const devices = [
+        { id: 1, name: 'Banik' },
+        { id: 2, name: 'Device B' },
+        { id: 3, name: 'Device C' }
+        ];
+
+        // Funkce pro načtení dat do select elementu
+        function loadFirstDevice() 
+        {
+            const selectElement = document.getElementById('deviceSelect');
+            const firstDevice = devices[0]; // Načteme první prvek
+
+            if (firstDevice) {
+                // Přidáme možnost do select
+                const option = document.createElement('option');
+                option.value = firstDevice.id;
+                option.textContent = firstDevice.name;
+                selectElement.appendChild(option);
+            }
+        }
+
+        // Volání funkce po načtení stránky
+        document.addEventListener('DOMContentLoaded', loadFirstDevice);
+    
+    </script> -->
+
+</body>
+</html>
