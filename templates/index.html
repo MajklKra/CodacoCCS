@@ -4,18 +4,119 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zarizeni</title>
+
+    <style>
+
+        html,body{
+            /* background-color: blue; */
+            height: 100%;
+            margin:0
+        }
+
+        #c1{
+            display: flex;
+            flex-direction: column;
+            justify-content:center;
+            align-items: center;
+            text-align: center;
+            color: #7393B3;
+
+            /* background-color: red;  */
+
+            height: 100%; /* Potomek zdědí výšku rodiče */
+            width: 100%;  /* Zajistí, že vyplní i šířku */
+
+            position: relative;
+        }
+
+        img{
+            margin-top: 150px;
+        }
+
+        a{
+            
+            /* all:unset; */
+
+            color: blue;
+            text-decoration: none;
+
+            text-align: right;
+
+            justify-content:start;
+            
+        }
+
+        /* Flexbox pro umístění přihlášení v pravém horním rohu */
+        .header {
+            position: absolute;
+            top: 0;
+            right: 0;
+            /* padding: 10px; */
+            padding-top: 20px;
+            padding-right: 50px;
+            display: flex;
+            justify-content: flex-end; /* Zarovná obsah (odkaz) na pravou stranu */
+            width: 50%; /* Zajistí, že je obsah zarovnaný na celou šířku */
+            /* background-color: green; */
+        }
+
+        .header2 {
+            position: absolute;
+            top: 0;
+            left: 0;
+            /* padding: 10px; */
+            padding-top: 20px;
+            padding-left: 50px;
+            display: flex;
+            justify-content: flex-start; /* Zarovná obsah (odkaz) na pravou stranu */
+            width: 50%; /* Zajistí, že je obsah zarovnaný na celou šířku */
+            /* background-color: blue;  */
+        }
+
+        @media screen and (min-width: 1200px)
+        {
+
+            #n1{
+               position: absolute;
+               top:300px;
+            }
+
+            #p1{
+               position: absolute;
+               top:360px;
+            }
+                
+        }
+
+    </style>
+
+
 </head>
 <body>
     <!-- <a href="/form" style="position: absolute; top: 0; right: 0; margin: 10px;">Prihlaseni</a> -->
 
-    <a href="/form" style="position: fixed; top: 50px; right: 120px; margin: 10px;">Přihlášení</a>
+    <div id = "c1">
 
-    <h1 style="text-align: center; margin-top: 150px; color: blue;"><b>Vítejte na strankach pro přihlášení</b></h1>
+        <div class="header">
+            <a href="/form" class="login"><b>Přihlášení</b></a>          
+        </div>
 
-    <p style="text-align: center;"> <i>Stránky zobrazují seznam aktivních zařízení v nemocnici. </i></p>
+        <div class="header2">
+            <img src="/static/images/codaco-logo.jpg" alt="Codaco" width="150px"  style="margin-top: 0px;"></a>       
+        </div>
 
-    <!-- 
-    <a href="/form">Prihlaseni</a> -->
- 
+        <!-- <a href="/form" style="position: fixed; top: 50px; right: 120px; margin: 10px; text-decoration: none; color: blue">Přihlášení</a> -->
+
+        <!-- <a href="/form">Přihlášení</a> -->
+
+        <!-- <h1 style="text-align: center; margin-top: 150px; color: #7393B3;"><b>Vítejte na strankach pro přihlášení</b></h1> -->
+
+        <b id = "n1" style="font-size: 50px">Vítejte na strankach pro přihlášení</b>
+
+        <p id = "p1" style="margin-top: 10px;"><i><b>Stránky zobrazují seznam aktivních zařízení v nemocnici. </b></i></p>
+
+        <!-- <img src="/static/images/codaco-logo.jpg" alt="Codaco" width="300px" heigh="300px"> -->
+
+    </div> 
 </body>
 </html>
