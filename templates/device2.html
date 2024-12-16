@@ -1,9 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="cs">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <meta http-equiv="refresh" content="1"> -->
     <title>Zařízení</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
     <style>
 
@@ -23,15 +26,6 @@
             /* margin-top: 100px; */
             font-family: 'Times New Roman', Times, serif !important /* Nastavení základního fontu */
         }
-
-    
-        /*
-        table, th, td 
-        {
-            border: 1px solid black;
-            border-collapse: collapse;
-        } 
-        */
 
         
         table
@@ -67,24 +61,7 @@
 
         tr th:first-child{border-left: solid 1px #BEBEBE !important;}
 
-        
-
-     
-        /* .container {
-            display: flex; /* Flexbox nastavení */
-            /* justify-content: space-between; /* Rozdělí obsah rovnoměrně */
-            /*width: 100%
-        } */
-
-        /* .box {
-            width: 45%; /* Nastavíme šířku, aby se oba divy vešly vedle sebe */
-            /* padding: 20px;
-            background-color: lightblue;
-            text-align: center;
-            border: 1px solid #ccc;
-            box-sizing: border-box; /* Zahrnuje padding do celkové šířky */
-        /* } */
-
+    
         #c1{
             background-color: #696969;
             /* width: 20%; */
@@ -212,20 +189,7 @@
             padding-left: 60px;
         }
 
-        .container-fluid{
-            /* background-color: orange; */
-            /*overflow-x: auto;
-            box-sizing: border-box;*/
-            /* position: relative; */
-        }
-
-        /* #c2>h4{
-            margin-top: 50px;
-            margin-bottom: 50px;
-            padding-top: 50px;
-        } */
-
-
+    
         #c3{
             /* background-color: #D3D3D3; */
             /* background-color: green; */
@@ -364,11 +328,6 @@
             }
 
 
-            #c2{
-                /* background-color: yellow; */
-                /* background-color: #F5F5F5; */
-                /*width: 100%;*/
-            }
 
             table
             {
@@ -795,9 +754,104 @@
         });
     </script>
 
-    
+    <script>
+                 
+        function formatDateTimeGMT(rawDate) {
+            // Vytvoření objektu Date z řetězce v GMT (UTC)
+            const date = new Date(rawDate);
+
+            if (isNaN(date)) {
+                console.error("Chyba: Neplatné datum", rawDate);
+                return "Neplatné datum";
+            }
+
+            // Získání jednotlivých částí data a času v UTC (bez přepočtu na lokální čas)
+            const day = String(date.getUTCDate()).padStart(2, '0');  // Den
+            const month = String(date.getUTCMonth() + 1).padStart(2, '0');  // Měsíc (getUTCMonth() vrací index, takže přičítáme 1)
+            const year = date.getUTCFullYear();  // Rok
+            const hours = String(date.getUTCHours()).padStart(2, '0');  // Hodiny
+            const minutes = String(date.getUTCMinutes()).padStart(2, '0');  // Minuty
+            const seconds = String(date.getUTCSeconds()).padStart(2, '0');  // Sekundy
+
+            // Sestavení formátovaného řetězce (bez mezer)
+            //return `${day}.${month}.${year} ${hours}:${minutes}:${seconds} GMT`;
+            return `${day}.${month}.${year} ${hours}:${minutes}:${seconds}`;
+        }
+
+        // Příklad použití
+        const rawDate = "Mon, 16 Dec 2024 12:52:27 GMT";
+        console.log(formatDateTimeGMT(rawDate));  // Výstup: 16.12.2024 12:52:27 GMT
+
+
+        function loadData() {
+            
+                axios.get('/get_data').then(function (response) {
+                const data = response.data;  // Získání dat z odpovědi
+
+                // Vyprázdníme tabulku
+                const tableBody = document.querySelector('#t1 tbody');
+                tableBody.innerHTML = '';
+
+                // Pro každý objekt v datech vytvoříme nový řádek v tabulce
+                data.forEach((item, index) => {
+                    console.log('Pořadí: ' + (index + 1));
+
+                    // Vytvoříme nový řádek pro tabulku
+                    const row = document.createElement('tr');
+
+                    // Získáme klíče (názvy vlastností) a hodnoty objektu
+                    const keys = Object.keys(item); // Klíče (např. ['id', 'name', 'age', 'runtime', 'director', 'genre'])
+                    const values = Object.values(item); // Hodnoty (např. [1, 'John', 30, 120, 'Spielberg', 'Drama'])
+
+                    // Pro každý klíč a hodnotu vytvoříme buňku v tabulce
+                    keys.forEach((key, i) => {
+                        const cell = document.createElement('td');
+                        cell.textContent = `${values[i]}`; // Zobrazí hodnotu
+
+
+                        if (i === 3)
+                        {
+                            // cell.textContent = formatDateTimeIntl(values[i])
+                            cell.textContent = formatDateTimeGMT(values[i])
+                        }
+
+
+                        // Pokud je to 6. sloupec, změňme text
+                        if (i === 4) { // Index 5 je 6. sloupec
+
+                            const seconds = values[i];
+
+                            const days = Math.floor(seconds / 86400.002); // Dny
+                            const hours = Math.floor((seconds / 86400.002 % 1) * 24); // Hodiny
+                            const minutes = Math.floor((((seconds / 86400.002 % 1) * 24) % 1) * 60); // Minuty
+
+                            cell.textContent = days + 'd ' + hours + 'h ' + minutes + 'm ' ;  // Zde nastavíte požadovanou hodnotu pro 6. sloupec
+                
+                        }
+
+                        row.appendChild(cell);  // Přidáme buňku do řádku
+                    });
+
+                    // Přidáme řádek do těla tabulky
+                    tableBody.appendChild(row);
+                });
+            })
+
+            .catch(function (error) {
+                console.log('Chyba při načítání dat:', error);
+            });
+        }
+
+
+        // Načítání dat každou sekundu
+        setInterval(loadData, 1000); // 3000ms = 3 sekundy
+
+        // První načtení dat při načtení stránky
+        loadData();
+
+    </script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
         
-
 </body>
 </html>

@@ -9,6 +9,11 @@ from datetime import timedelta
 from flask import session
 from datetime import datetime
 from babel.dates import format_datetime
+from flask import jsonify
+
+
+# Globální proměnná
+selected_device = ""
 
 app = Flask(__name__)
 
@@ -170,9 +175,46 @@ def device():
 @role_required('admin','user')
 def device2():
 
-    selected_device = request.args.get('device', '')  # Získání parametru 'device' z URL
+    global selected_device 
+    selected_device = request.args.get('device', '')  # Získání parametru 'device' z URLg
     flash(selected_device)
 
+    query = """
+            SELECT DeviceTypeShortCut, MacAddressStr, IPAddressStr, LastActivity, RunTime, VersionString
+            FROM   HwIpDevicesAddrMem
+            JOIN   HwIpDevicesTypes ON HwIpDevicesTypes.DeviceTypeID = HwIpDevicesAddrMem.DeviceTypeID;
+            """
+
+    conn = mysql.connector.connect(**db_config)
+    cursor = conn.cursor()
+    cursor.execute(query)
+    results = cursor.fetchall()
+    conn.close()
+
+    # Zavoláme funkci get_data_from_db s parametrem selected_device
+    results2 = get_data_from_db()
+
+    # Aktuální čas
+    current_time = datetime.now()
+    formatted_time = format_datetime(current_time, "EEEE d. MMMM yyyy", locale="cs")
+    formatted_time = formatted_time[0].upper() + formatted_time[1:]
+
+    # Předání dat do šablony
+    return render_template(
+        "device2.html",
+        devices=results,
+        user=current_user,
+        current_time=current_time,
+        formatted_time=formatted_time,
+        query=results2,
+        selected_device = selected_device
+    )
+
+ 
+def get_data_from_db():
+
+    global selected_device
+ 
     if selected_device == "":
         s = """
             SELECT DeviceTypeShortCut, MacAddressStr, IPAddressStr, LastActivity, RunTime, VersionString 
@@ -187,44 +229,22 @@ def device2():
             WHERE DeviceTypeShortCut = '{selected_device}';
         """
 
-    try:
-        # Připojení k databázi
-        with mysql.connector.connect(**db_config) as conn:
-            with conn.cursor() as cursor:
-                # Dotaz 1: Získání všech zařízení
-                query = """
-                        SELECT DeviceTypeShortCut, MacAddressStr, IPAddressStr, LastActivity, RunTime, VersionString
-                        FROM   HwIpDevicesAddrMem
-                        JOIN   HwIpDevicesTypes ON HwIpDevicesTypes.DeviceTypeID = HwIpDevicesAddrMem.DeviceTypeID;
-                        """
-                cursor.execute(query)
-                results = cursor.fetchall()
+    # Připojení k databázi
+    conn = mysql.connector.connect(**db_config)
+    cursor = conn.cursor()
+    cursor.execute(s)
+    data = cursor.fetchall()
+    conn.close()
+    return data
 
-                # Dotaz 2: Získání zařízení podle parametru
-                cursor.execute(s)
-                results2 = cursor.fetchall()
+@app.route('/get_data', methods=['GET'])
+def get_data():
 
-        # Aktuální čas
-        current_time = datetime.now()
-        formatted_time = format_datetime(current_time, "EEEE d. MMMM yyyy", locale="cs")
-        formatted_time = formatted_time[0].upper() + formatted_time[1:]
+    data = get_data_from_db()
 
-        # Předání dat do šablony
-        return render_template(
-            "device2.html",
-            devices=results,
-            user=current_user,
-            current_time=current_time,
-            formatted_time=formatted_time,
-            query=results2,
-            selected_device = selected_device
-        )
+    return jsonify(data)
 
-    except mysql.connector.Error as err:
-        # Zpracování chyby připojení
-        return f"Chyba připojení k databázi: {err}"
     
-
 @app.route('/test')
 @role_required('admin','user')
 def test():
