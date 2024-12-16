@@ -260,7 +260,7 @@
             margin-left: 0px !important;
             margin-right: 0px !important; */
 
-            margin-top: 50px;
+            margin-top: 30px;
             margin-bottom: 50px;
             width: 100% !important;
         }
@@ -481,7 +481,7 @@
             }
 
             #c4>p>a{
-                padding-right: 100px;
+                padding-right: 20px;
             }
 
        
@@ -578,10 +578,16 @@
                         </form>
                     </div>
 
-                    <p>
-                        <b>{{ formatted_time }} {{ current_time.strftime('%H:%M') }}   &nbsp&nbsp Uživatel: {{user.id}}</b> 
-                        &nbsp&nbsp <a href="/logout">Odhlášení</a>
-                    </p>
+                    <p> 
+                        <!-- <b>{{ formatted_time }} {{ current_time.strftime('%H:%M') }}   &nbsp&nbsp Uživatel: {{user.id}}</b> 
+                        &nbsp&nbsp <a href="/logout">Odhlášení</a>  -->
+
+
+                        <!-- <p id="p1" style="margin-right: 0px;"><b> </b></p> &nbsp&nbsp Uživatel: {{user.id}} &nbsp&nbsp <a href="/logout">Odhlášení</a> -->
+
+                        <span id="span1"> </span> <b> &nbsp&nbsp Uživatel: {{user.id}} </b> &nbsp&nbsp <a href="/logout">Odhlášení</a>
+
+                    </p> 
                 
                 </div>
 
@@ -778,13 +784,40 @@
             return `${day}.${month}.${year} ${hours}:${minutes}:${seconds}`;
         }
 
-        // Příklad použití
-        const rawDate = "Mon, 16 Dec 2024 12:52:27 GMT";
-        console.log(formatDateTimeGMT(rawDate));  // Výstup: 16.12.2024 12:52:27 GMT
+        // // Příklad použití
+        // const rawDate = "Mon, 16 Dec 2024 12:52:27 GMT";
+        // console.log(formatDateTimeGMT(rawDate));  // Výstup: 16.12.2024 12:52:27 GMT
 
 
         function loadData() {
-            
+
+                // Získání aktuálního času
+                const currentTime = new Date();
+
+                // Pole pro názvy měsíců a dnů v týdnu v češtině
+                const daysOfWeek = ["Neděle", "Pondělí", "Úterý", "Středa", "Čtvrtek", "Pátek", "Sobota"];
+                const months = ["ledna", "února", "března", "dubna", "května", "června", "července", "srpna", "září", "října", "listopadu", "prosince"];
+
+                // Získání jednotlivých částí data
+                const dayOfWeek = daysOfWeek[currentTime.getDay()]; // Den v týdnu
+                const day = currentTime.getDate(); // Den v měsíci
+                const month = months[currentTime.getMonth()]; // Měsíc
+                const year = currentTime.getFullYear(); // Rok
+                const hours = String(currentTime.getHours()).padStart(2, '0'); // Hodiny
+                const minutes = String(currentTime.getMinutes()).padStart(2, '0'); // Minuty
+
+                // Sestavení výsledného formátu
+                const formattedDate = `${dayOfWeek} ${day}. ${month} ${year} ${hours}:${minutes}`;
+
+                // Zobrazení na stránce nebo v konzoli
+                console.log(formattedDate);
+
+                // // Pokud chcete zobrazit na stránce, můžete použít:
+                // document.getElementById('time-display').innerText = formattedDate;
+
+                document.getElementById('span1').innerHTML = '<b>'+ formattedDate + '</b>';
+
+    
                 axios.get('/get_data').then(function (response) {
                 const data = response.data;  // Získání dat z odpovědi
 
