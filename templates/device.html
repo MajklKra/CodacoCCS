@@ -21,6 +21,7 @@
         /* margin-top: 100px; */
 
         font-family: 'Times New Roman', Times, serif !important
+
      }
 
    
@@ -86,11 +87,29 @@
         }
 
         #c2{
-            background-color: #F5F5F5;
-            /* width: 80%; */
+            /* background-color: #F5F5F5;
+            /* width: 80%; 
             height: 100vh;
             border-radius: 5px;
-            position: relative;
+            position: relative; */
+
+            background-color: #F5F5F5; 
+            /* background-color: blue !important; */
+            /* width: 80%; */
+            /* height: 100vh; */
+            min-height: 80vh; /* Minimální výška */
+            height: auto; /* Výška se přizpůsobí podle obsahu */
+            border-radius: 5px;
+            overflow-x: auto;
+            display: flex;
+            flex-direction: column;
+            /* justify-content: center;
+            align-items: flex-start; */
+
+            padding-bottom: 0px;
+
+            /* position: relative; */
+
         }
 
         #c2>p>a{
@@ -192,6 +211,46 @@
             /*background-color: orange;*/
         }
 
+        #c4{
+            /* background-color: red; */
+            /* width: 80%; */
+            /* height: 100vh; */
+            /* min-height: 20vh; */
+            border-radius: 5px;
+            overflow-x: auto;
+            display: flex;
+            flex-direction: row;
+            justify-content:flex-end;
+            align-items: flex-start;
+            /* margin-top: 0px;
+            margin-left: 0px !important;
+            margin-right: 0px !important; */
+
+            margin-top: 30px;
+            margin-bottom: 50px;
+            width: 100% !important;
+        }
+
+        #c4>p>a{
+            text-decoration: none;
+            /* padding-left: 10px; */
+            padding-right: 0px;
+            color: blue; 
+            /* position: absolute;
+            top:30px;
+            right: 50px; */
+        } 
+
+        #c4>p{
+            /*
+            position: absolute;
+            top:30px;
+            right: 50px; 
+            */
+            /* color: blue; */
+            color: #7393B3; 
+        }
+
         @media screen and (max-width: 300px) 
         {
             body
@@ -281,6 +340,9 @@
                 background-color: #F5F5F5;
             }
 
+            #c4>p>a{
+                padding-right: 36px;
+            }
 
         }
 
@@ -295,7 +357,7 @@
     <div class="container-fluid">
         <div class="row">
             <div id="c1" class="col-12 col-md-4 col-lg-4 col-xl-4 col-xxl-2" >
-                <h1 style="color: white; margin: 50px 0px; text-align:left;">MS Server</h1>
+                <h1 style="color: white; margin: 50px 0px; text-align:center;">MS Server</h1>
 
                 <button class="accordion" style="font-size:large;">Struktura instituce</button>
                 <div class="panel">
@@ -354,13 +416,19 @@
             </div>
 
             <div id="c2" class="col-12 col-md-8 col-lg-8 col-xl-8 col-xxl-10">
-                <p>
-                    <!-- <b>{{ formatted_time }} {{ current_time.strftime('%H:%M') }}   &nbsp&nbsp Uživatel: {{user.id}}</b> 
-                    <a href="/logout">Odhlášení</a> -->
+                <div id="c4"> 
+                    <p> 
+                        <!-- <b>{{ formatted_time }} {{ current_time.strftime('%H:%M') }}   &nbsp&nbsp Uživatel: {{user.id}}</b> 
+                        &nbsp&nbsp <a href="/logout">Odhlášení</a>  -->
 
-                    <span id="span1"></span><b>&nbsp&nbsp Uživatel: {{user.id}}</b>&nbsp&nbsp<a href="/logout">Odhlášení</a>
 
-                </p>
+                        <!-- <p id="p1" style="margin-right: 0px;"><b> </b></p> &nbsp&nbsp Uživatel: {{user.id}} &nbsp&nbsp <a href="/logout">Odhlášení</a> -->
+
+                        <span id="span1"> </span> <b> &nbsp&nbsp Uživatel: {{user.id}} </b> &nbsp&nbsp <a href="/logout">Odhlášení</a>
+
+                    </p> 
+                
+                </div>
             </div>
 
         </div>
