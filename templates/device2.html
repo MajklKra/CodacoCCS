@@ -550,7 +550,7 @@
                 
             </div> -->
 
-            {% set data_dict = {} %}
+            <!-- {% set data_dict = {} %}
             {% for row in devices %}
                 {% set _ = data_dict.update({row[0]: row[1]}) %}
             {% endfor %}
@@ -558,7 +558,7 @@
             {% set data_dict2 = {} %}
             {% for row in query %}
                 {% set _ = data_dict2.update({row[0]: row[1]}) %}
-            {% endfor %}
+            {% endfor %} -->
 
 
 
@@ -567,9 +567,10 @@
                 <div id="c4"> 
                     <div id="c3">
                         <h5> <b>Výběr podle typu I/O prvku</b></h5> 
-                        <form action="{{ url_for('device2') }}" method="GET">
+                        <form id="device-form" action="{{ url_for('device2') }}" method="GET">
                             <!-- <label for="devices">Vyber zařízení:</label> -->
-                            <select name="device" id="equ" onchange="this.form.submit()">
+                            <!-- <select name="device" id="equ" onchange="this.form.submit(); saveDevice()"> -->
+                            <select name="device" id="equ" onchange="handleChange(event)">
                                 <option value="">Vyberte zařízení 
                                 {% for key, value in data_dict.items() %}
                                     <option value="{{key}}" {% if key == selected_device %}selected{% endif %}>{{ key }}</option>
@@ -761,7 +762,7 @@
     </script>
 
     <script>
-                 
+                    
         function formatDateTimeGMT(rawDate) {
             // Vytvoření objektu Date z řetězce v GMT (UTC)
             const date = new Date(rawDate);
@@ -784,12 +785,17 @@
             return `${day}.${month}.${year} ${hours}:${minutes}:${seconds}`;
         }
 
-        // // Příklad použití
-        // const rawDate = "Mon, 16 Dec 2024 12:52:27 GMT";
-        // console.log(formatDateTimeGMT(rawDate));  // Výstup: 16.12.2024 12:52:27 GMT
+        let selectedDevice = null;
 
+        function saveDevice() {
+            // Uložení vybraného zařízení
+            selectedDevice = document.getElementById('equ').value;
+            console.log("Vybrané zařízení: " + selectedDevice);
+        }
 
         function loadData() {
+
+                saveDevice() 
 
                 // Získání aktuálního času
                 const currentTime = new Date();
@@ -817,9 +823,19 @@
 
                 document.getElementById('span1').innerHTML = '<b>'+ formattedDate + '</b>';
 
-    
-                axios.get('/get_data').then(function (response) {
-                const data = response.data;  // Získání dat z odpovědi
+                // axios.get('/get_data').then(function (response) {
+                // const data = response.data;  // Získání dat z odpovědi
+
+                console.log('Hodnota promenne selectedDevice: je ' + selectedDevice)
+
+                axios.get('/get_data', {
+                params: {
+                    // sd: 'SRV1'  // SVR1 je řetězec
+                    sd: selectedDevice
+                }
+                }).then(function (response) {
+                    const data = response.data;  // Získání dat z odpovědi
+                
 
                 // Vyprázdníme tabulku
                 const tableBody = document.querySelector('#t1 tbody');
@@ -841,13 +857,11 @@
                         const cell = document.createElement('td');
                         cell.textContent = `${values[i]}`; // Zobrazí hodnotu
 
-
                         if (i === 3)
                         {
                             // cell.textContent = formatDateTimeIntl(values[i])
                             cell.textContent = formatDateTimeGMT(values[i])
                         }
-
 
                         // Pokud je to 6. sloupec, změňme text
                         if (i === 4) { // Index 5 je 6. sloupec
@@ -875,13 +889,45 @@
             });
         }
 
-
         // Načítání dat každou sekundu
         setInterval(loadData, 1000); // 3000ms = 3 sekundy
 
         // První načtení dat při načtení stránky
         loadData();
 
+    </script>
+
+    <!-- <script>
+        // Tato proměnná bude uchovávat vybrané zařízení
+        let selectedDevice = null;
+
+        // Funkce pro uložení vybraného zařízení
+        function saveDevice() {
+            // Získání hodnoty vybraného zařízení
+            selectedDevice = document.getElementById('equ').value;
+            
+            // Tato hodnota je nyní uložena v proměnné selectedDevice
+            console.log("Vybrané zařízení: " + selectedDevice);
+
+            // Pokud chcete hodnotu zobrazit na stránce:
+            document.getElementById('selected-device-display').innerText = 'Vybrané zařízení: ' + selectedDevice;
+        }
+    </script> -->
+
+    <script>
+        function handleChange(event) {
+            // Získání vybraného zařízení
+            saveDevice();
+
+            // Odeslání formuláře
+            document.getElementById('device-form').submit();
+        }
+
+        // function saveDevice() {
+        //     // Uložení vybraného zařízení
+        //     let selectedDevice = document.getElementById('equ').value;
+        //     console.log("Vybrané zařízení: " + selectedDevice);
+        // }
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

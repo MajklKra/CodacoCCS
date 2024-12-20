@@ -11,6 +11,9 @@ from datetime import datetime
 from babel.dates import format_datetime
 from flask import jsonify
 
+# Cookie
+import uuid   
+
 
 # Globální proměnná
 selected_device = ""
@@ -18,6 +21,12 @@ selected_device = ""
 app = Flask(__name__)
 
 app.secret_key = secrets.token_hex(16)
+
+# Cookie
+app.config['SESSION_COOKIE_SECURE'] = True  # Pouze přes HTTPS
+app.config['SESSION_COOKIE_HTTPONLY'] = True  # Nepřístupné přes JavaScript
+
+
 bcrypt = Bcrypt(app)
 
 login_manager = LoginManager()
@@ -134,37 +143,37 @@ def login():
 @role_required('admin','user')
 def device():
     try:
-        # Připojení k MySQL databázi
-        conn = mysql.connector.connect(**db_config)
-        cursor = conn.cursor()
+        # # Připojení k MySQL databázi
+        # conn = mysql.connector.connect(**db_config)
+        # cursor = conn.cursor()
 
-        # Provedení SQL dotazu
-        query = "SELECT MacAddressStr,IPAddressStr, LastActivity, RunTime, VersionString FROM HwIpDevicesAddrMem;"
+        # # Provedení SQL dotazu
+        # query = "SELECT MacAddressStr,IPAddressStr, LastActivity, RunTime, VersionString FROM HwIpDevicesAddrMem;"
 
-        query2 = """
-                 SELECT DeviceTypeShortCut, MacAddressStr, IPAddressStr, LastActivity, RunTime, VersionString
-                 FROM   HwIpDevicesAddrMem
-                 JOIN   HwIpDevicesTypes ON HwIpDevicesTypes.DeviceTypeID = HwIpDevicesAddrMem.DeviceTypeID;
-                 """
+        # query2 = """
+        #          SELECT DeviceTypeShortCut, MacAddressStr, IPAddressStr, LastActivity, RunTime, VersionString
+        #          FROM   HwIpDevicesAddrMem
+        #          JOIN   HwIpDevicesTypes ON HwIpDevicesTypes.DeviceTypeID = HwIpDevicesAddrMem.DeviceTypeID;
+        #          """
         
-        query3 = """
-                 SELECT *
-                 FROM   HwIpDevicesTypes;
-                 """
+        # query3 = """
+        #          SELECT *
+        #          FROM   HwIpDevicesTypes;
+        #          """
 
-        cursor.execute(query2)
-        results = cursor.fetchall()
+        # cursor.execute(query2)
+        # results = cursor.fetchall()
 
-        # Zavření kurzoru a připojení
-        cursor.close()
-        conn.close()
+        # # Zavření kurzoru a připojení
+        # cursor.close()
+        # conn.close()
 
         current_time = datetime.now()
         formatted_time = format_datetime(current_time, "EEEE d. MMMM yyyy", locale="cs")
         formatted_time = formatted_time[0].upper() + formatted_time[1:]
 
         # Předání dat do šablony
-        return render_template("device.html", devices=results, user=current_user, current_time=current_time, formatted_time=formatted_time)
+        return render_template("device.html", user=current_user, current_time=current_time, formatted_time=formatted_time)
 
     except mysql.connector.Error as err:
         # Zpracování chyby připojení
@@ -175,9 +184,14 @@ def device():
 @role_required('admin','user')
 def device2():
 
-    global selected_device 
-    selected_device = request.args.get('device', '')  # Získání parametru 'device' z URLg
-    flash(selected_device)
+    sd = ""
+    sd = request.args.get('device', '')
+
+    # print(sd)
+
+    # global selected_device 
+    # selected_device = request.args.get('device', '')  # Získání parametru 'device' z URLg
+    # flash(selected_device)
 
     query = """
             SELECT DeviceTypeShortCut, MacAddressStr, IPAddressStr, LastActivity, RunTime, VersionString
@@ -192,7 +206,7 @@ def device2():
     conn.close()
 
     # Zavoláme funkci get_data_from_db s parametrem selected_device
-    results2 = get_data_from_db()
+    results2 = get_data_from_db(sd)
 
     # Aktuální čas
     current_time = datetime.now()
@@ -207,26 +221,35 @@ def device2():
         current_time=current_time,
         formatted_time=formatted_time,
         query=results2,
-        selected_device = selected_device
+        # selected_device = selected_device
+        selected_device = sd
     )
 
  
-def get_data_from_db():
+def get_data_from_db(sd):
 
-    global selected_device
- 
-    if selected_device == "":
+    # global selected_device
+
+    # if selected_device == "":
+    if sd == "":
         s = """
             SELECT DeviceTypeShortCut, MacAddressStr, IPAddressStr, LastActivity, RunTime, VersionString 
             FROM HwIpDevicesAddrMem 
             JOIN HwIpDevicesTypes ON HwIpDevicesTypes.DeviceTypeID = HwIpDevicesAddrMem.DeviceTypeID;
         """
     else:
+        # s = f"""
+        #     SELECT DeviceTypeShortCut, MacAddressStr, IPAddressStr, LastActivity, RunTime, VersionString 
+        #     FROM HwIpDevicesAddrMem 
+        #     JOIN HwIpDevicesTypes ON HwIpDevicesTypes.DeviceTypeID = HwIpDevicesAddrMem.DeviceTypeID
+        #     WHERE DeviceTypeShortCut = '{selected_device}';
+        # """
+
         s = f"""
             SELECT DeviceTypeShortCut, MacAddressStr, IPAddressStr, LastActivity, RunTime, VersionString 
             FROM HwIpDevicesAddrMem 
             JOIN HwIpDevicesTypes ON HwIpDevicesTypes.DeviceTypeID = HwIpDevicesAddrMem.DeviceTypeID
-            WHERE DeviceTypeShortCut = '{selected_device}';
+            WHERE DeviceTypeShortCut = '{sd}';
         """
 
     # Připojení k databázi
@@ -240,7 +263,11 @@ def get_data_from_db():
 @app.route('/get_data', methods=['GET'])
 def get_data():
 
-    data = get_data_from_db()
+    sd = request.args.get('sd') 
+
+    print(f"hodnota sd ve funkci get_data {sd}")
+
+    data = get_data_from_db(sd)
 
     return jsonify(data)
 
