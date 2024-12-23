@@ -11,12 +11,13 @@ from datetime import datetime
 from babel.dates import format_datetime
 from flask import jsonify
 
-# Cookie
-import uuid   
+import uuid
 
 
-# Globální proměnná
-selected_device = ""
+# pocet = 0
+
+# Slouží k udržování informace o přihlášených uživatelích
+active_sessions = {}
 
 app = Flask(__name__)
 
@@ -25,7 +26,6 @@ app.secret_key = secrets.token_hex(16)
 # Cookie
 app.config['SESSION_COOKIE_SECURE'] = True  # Pouze přes HTTPS
 app.config['SESSION_COOKIE_HTTPONLY'] = True  # Nepřístupné přes JavaScript
-
 
 bcrypt = Bcrypt(app)
 
@@ -111,21 +111,98 @@ def form():
 @app.route('/logout')
 @login_required
 def logout():
+
+    global pocet
+
     logout_user()
+
+    session_id = session.get('session_id')
+    if session_id in active_sessions:
+        del active_sessions[session_id]  # Odstranit uživatele z aktivních sessions
+
+    pocet = 0
+
     session.clear()
     flash("Odhlášení úspěšné!", "success")
     return redirect(url_for('login'))
 
+    # session_id = session.get('session_id')
+    # if session_id in active_sessions:
+    #     del active_sessions[session_id]  # Odstranit uživatele z aktivních sessions
+    # session.clear()  # Vymazání všech session údajů
+    # # return redirect(url_for('login'))
+    # message = "Vsichni uzivatele byli odhlaseni !!!"
 
+   
 @app.route("/login", methods=["POST", "GET"])
 def login():
+
+    global active_sessions 
+    global pocet
+
     if request.method == "POST":
-        username = request.form.get("username")
-        password = request.form.get("password")
+        username = request.form.get("username")   # jméno z formuláře
+        password = request.form.get("password")   # heslo z formuláře
 
-        user = users.get(username)
+        user = users.get(username)                # jméno ze seznamu
 
-        if user and bcrypt.check_password_hash(user['password'], password):
+        if user and bcrypt.check_password_hash(user['password'], password):   # ověření, zda existuje user v seznamu a zda se zadané heslo rovná heslu z databáze 
+                
+                # pocet = pocet + 1
+                
+                # Pokud je uživatel již přihlášen z jiného prohlížeče, zamezte přihlášení
+                if session.get('session_id') in active_sessions:
+                    message = "Jiný uživatel používá stejný prohlížeč !"
+                    # return "User is already logged in from this browser."
+                    return render_template('result.html', x = message)
+
+                # user_value = session.get("6af2a6f6-5113-4c25-9f0f-eb16837ebd9d", None)
+
+                _user = None
+                valuefound = None
+                for key, value in active_sessions.items():
+                    _user = value
+                    break
+
+                # if pocet ==2:
+                #     print(f"Pocet je {pocet}")
+
+                # Zamezte přihlášení, pokud je jiný uživatel již přihlášen
+                # if 'current_user' in session and session['current_user'] == username:
+                if _user == username:
+                    message = "Stejný uživatel je již přihlášen !"
+                    # return "Another user is already logged in. Please log out first."
+                    return render_template('result.html', x = message)
+                
+                # if username  in active_sessions:
+
+                # if username in active_sessions:
+                #     # Získání session_id uloženého pro daného uživatele
+                #     existing_session_id = active_sessions[username]
+    
+                #     # Pokud se uživatel pokouší přihlásit z jiné relace (jiný prohlížeč)
+                #     current_session_id = session.get('session_id')
+                #     if current_session_id is None:
+                #         # Pokud session_id ještě neexistuje, vygenerujeme nové
+                #         session['session_id'] = str(uuid.uuid4())
+                #         current_session_id = session['session_id']
+    
+                #     if existing_session_id != current_session_id:
+                #         message = "Tento uživatel je již přihlášen z jiného zařízení!"
+                #         return render_template('result.html', x=message)
+                    
+                #     else:
+                #         # Pokud uživatel není v `active_sessions`, uložíme nový session_id
+                #         session['session_id'] = str(uuid.uuid4())
+                #         active_sessions[username] = session['session_id']
+
+
+                # Uložení session ID do relace pro sledování aktivního uživatele
+                session['session_id'] = str(uuid.uuid4())  # Vytvoření unikátního ID
+                session['current_user'] = username
+                active_sessions[session['session_id']] = username
+                # return redirect(url_for('home'))
+
                 # session['user'] = user
                 login_user(User(username, user["role"]))
 

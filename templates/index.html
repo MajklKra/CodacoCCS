@@ -23,7 +23,7 @@
 
             /* background-color: red;  */
 
-            height: 100%; /* Potomek zdědí výšku rodiče */
+            height: 90%; /* Potomek zdědí výšku rodiče */
             width: 100%;  /* Zajistí, že vyplní i šířku */
 
             position: relative;
@@ -73,6 +73,23 @@
             /* background-color: blue;  */
         }
 
+        .footer {
+            display: flex;
+            justify-content: space-between; /* Obsah bude rozprostřen mezi levou a pravou stranu */
+            align-items: center; /* Vertikálně zarovná obsah na střed */
+            color: #7393B3;
+            padding: 10px 20px; /* Odstupy uvnitř patky */
+            font-size: 14px; /* Velikost písma */
+        }
+
+        .footer-left {
+            padding-left: 50px;
+        }
+
+        .footer-right {
+            padding-right: 50px;
+        }
+
         @media screen and (min-width: 1200px)
         {
 
@@ -111,12 +128,18 @@
 
         <!-- <h1 style="text-align: center; margin-top: 150px; color: #7393B3;"><b>Vítejte na strankach pro přihlášení</b></h1> -->
 
-        <b id = "n1" style="font-size: 50px">Vítejte na strankach pro přihlášení</b>
+        <b id = "n1" style="font-size: 50px">Vítejte na stránkách pro přihlášení</b>
 
         <p id = "p1" style="margin-top: 10px;"><i><b>Stránky zobrazují seznam aktivních zařízení v nemocnici. </b></i></p>
 
         <!-- <img src="/static/images/codaco-logo.jpg" alt="Codaco" width="300px" heigh="300px"> -->
 
     </div> 
+
+    <footer class="footer">
+        <div class="footer-left">  <b>Verze 1.0</b></div>
+        <div class="footer-right"> <b>© 2024 Michal Kraninger.</b></div>
+    </footer>
+
 </body>
 </html>
