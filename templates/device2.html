@@ -800,6 +800,8 @@
                 // Získání aktuálního času
                 const currentTime = new Date();
 
+                console.log("Device2: aktuální čas: " + currentTime)
+
                 // Pole pro názvy měsíců a dnů v týdnu v češtině
                 const daysOfWeek = ["Neděle", "Pondělí", "Úterý", "Středa", "Čtvrtek", "Pátek", "Sobota"];
                 const months = ["ledna", "února", "března", "dubna", "května", "června", "července", "srpna", "září", "října", "listopadu", "prosince"];
@@ -852,6 +854,8 @@
                     const keys = Object.keys(item); // Klíče (např. ['id', 'name', 'age', 'runtime', 'director', 'genre'])
                     const values = Object.values(item); // Hodnoty (např. [1, 'John', 30, 120, 'Spielberg', 'Drama'])
 
+                    let rozdil2 = 0; // Inicializace rozdílu mimo forEach
+
                     // Pro každý klíč a hodnotu vytvoříme buňku v tabulce
                     keys.forEach((key, i) => {
                         const cell = document.createElement('td');
@@ -861,6 +865,28 @@
                         {
                             // cell.textContent = formatDateTimeIntl(values[i])
                             cell.textContent = formatDateTimeGMT(values[i])
+
+                            const currentTime = new Date()
+
+                            const dbTime = new Date(values[i])   
+
+                            // Získáme časový posun v minutách
+                            const timezoneOffset = dbTime.getTimezoneOffset();  // Vrátí posun v minutách, pozitivní hodnoty = východ, negativní = západ
+
+                            // Odečteme tento posun v milisekundách
+                            const correctedDate = new Date(dbTime.getTime() + timezoneOffset * 60000);
+
+                            console.log('TEST: currentTime:' + currentTime)
+                            console.log('TEST: dbTime:' + dbTime)
+
+                            console.log('TEST: correctedDate:' + correctedDate)
+
+                            rozdil = currentTime.getTime() - correctedDate.getTime()
+                            rozdil2 = rozdil/1000
+
+                            console.log("TEST: Rozdil je: " + rozdil + "[ms]")
+                            console.log("TEST: Rozdil je: " + rozdil2 + "[s]")
+
                         }
 
                         // Pokud je to 6. sloupec, změňme text
@@ -876,8 +902,15 @@
                 
                         }
 
+                        // Obarvíme řádek, pokud je rozdil2 větší než 5
+                        if (rozdil2 > 10) {
+                            row.style.backgroundColor = '#FFFDD0';
+                        }
+
                         row.appendChild(cell);  // Přidáme buňku do řádku
                     });
+
+                    
 
                     // Přidáme řádek do těla tabulky
                     tableBody.appendChild(row);

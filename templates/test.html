@@ -6,96 +6,198 @@
     <title>Testovací stránka</title>
 
     <style>
+
+        html, body{
+            width: 100%;
+            height: 100%;
+        }
         
         body
         {
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-content: center;
+            justify-content: flex-start;
+            align-content: flex-start; 
             text-align:center;     
         }
 
-        #c1{
-
-            padding-top: 50px;
-            padding-left: 100px;
-
+  
+        #t1{
+            text-align: center;
+            margin: 50px auto;
         }
+
     </style>
 </head>
 
 <body>
     <h1 style="color: red; text-align: center; padding-top: 50px;"> Vítej na testovací stránce </h1>
 
-    <!-- Vytvoření slovníku -->
-    {% set data_dict = {} %}
-    {% for row in devices %}
-        {% set _ = data_dict.update({row[0]: row[1]}) %}
-    {% endfor %}
+    <h1 id="test"style="color: blue; text-align: center; padding-top: 50px;"> Vítej na testovací stránce </h1>
 
-    <!-- Iterace přes slovník -->
-    <ul>
-        {% for key, value in data_dict.items() %}
-            
-               <p style="margin-top: 0px; padding-top: 0px; margin-bottom: 0px; padding-bottom: 0px;"> klíč <strong>{{ key }}</strong>: hodnota {{ value }}  </p>
-            
-        {% endfor %}
-    </ul>
+    <div id = "c1">  
+        <table id="t1"> 
+            <thead>
+                <tr>
+                    <th>Typ prvku/IO </th>
+                    <th>MAC Adresa </th>
+                    <th>IP Adresa</th>
+                    <th>Last Activity</th>
+                    <th>RunTime</th>
+                    <th>Verze</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for device in devices %}
 
-    <div id = "c1">
-        <!-- <label for="pet-select">Choose a device:</label>
-        <select id="deviceSelect">
-            <option value="">--Vyberte zarizeni--
+                <!-- <tr>
+                    <td>{{ device[0] }}</td>
+                    <td>{{ device[1] }}</td>
+                    <td>{{ device[2] }}</td> 
+                    <td>{{ device[3] }}</td>
+                    <td>{{ device[4] }} </td>
+                    <td>{{ device[5] }}</td>
+                </tr>
+                {% endfor %} -->
 
-            {% for key, value in data_dict.items() %}
-                <option value="{{ value }}">{{ key }}</option>
-            {% endfor %}
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td> 
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
 
-        </select> -->
-
-
-        <form action="{{ url_for('device2') }}" method="GET">
-            <label for="devices">Vyber zařízení:</label>
-            <select name="device" id="equ" onchange="this.form.submit()">
-                <option value="">--Vyberte zarizeni--
-                {% for key, value in data_dict.items() %}
-                    <option value="{{key}}" {% if key == selected_device %}selected{% endif %}>{{ key }}</option>
-                {% endfor %}
-            </select>
-        </form>
-    </div>
-
-
-
-
-
-    <!-- <script>
-        const devices = [
-        { id: 1, name: 'Banik' },
-        { id: 2, name: 'Device B' },
-        { id: 3, name: 'Device C' }
-        ];
-
-        // Funkce pro načtení dat do select elementu
-        function loadFirstDevice() 
-        {
-            const selectElement = document.getElementById('deviceSelect');
-            const firstDevice = devices[0]; // Načteme první prvek
-
-            if (firstDevice) {
-                // Přidáme možnost do select
-                const option = document.createElement('option');
-                option.value = firstDevice.id;
-                option.textContent = firstDevice.name;
-                selectElement.appendChild(option);
-            }
-        }
-
-        // Volání funkce po načtení stránky
-        document.addEventListener('DOMContentLoaded', loadFirstDevice);
+            </tbody>
+        </table> 
+        
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        
     
-    </script> -->
+        <script>
 
+                function loadData() 
+                {
+
+                    document.querySelector('#test').textContent='Testovaní času';
+
+                    // ----------------------------------------------------------------------------------------------------------------------------------------
+
+                    // Získání aktuálního času
+                    const currentTime = new Date();
+
+
+                    console.log("TEST: aktuální čas: " + currentTime)
+                    // console.log("TEST: timeToCompare: " + timeToCompare)
+
+                    // Pole pro názvy měsíců a dnů v týdnu v češtině
+                    const daysOfWeek = ["Neděle", "Pondělí", "Úterý", "Středa", "Čtvrtek", "Pátek", "Sobota"];
+                    const months = ["ledna", "února", "března", "dubna", "května", "června", "července", "srpna", "září", "října", "listopadu", "prosince"];
+
+                    // Získání jednotlivých částí data
+                    const dayOfWeek = daysOfWeek[currentTime.getDay()]; // Den v týdnu
+                    const day = currentTime.getDate(); // Den v měsíci
+                    const month = months[currentTime.getMonth()]; // Měsíc
+                    const year = currentTime.getFullYear(); // Rok
+                    const hours = String(currentTime.getHours()).padStart(2, '0'); // Hodiny
+                    const minutes = String(currentTime.getMinutes()).padStart(2, '0'); // Minuty
+
+                    // Sestavení výsledného formátu
+                    const formattedDate = `${dayOfWeek} ${day}. ${month} ${year} ${hours}:${minutes}`;
+
+                    // Zobrazení na stránce nebo v konzoli
+                    console.log(formattedDate);
+
+                    // ----------------------------------------------------------------------------------------------------------------------------------------
+
+                    axios.get('/get_data', {
+                    params: {
+                        sd: ''
+                    }
+                    }).then(function (response) {
+                        const data = response.data;  // Získání dat z odpovědi
+
+
+                    // Vyprázdníme tabulku
+                    const tableBody = document.querySelector('#t1 tbody');
+                    tableBody.innerHTML = '';
+
+                    // Pro každý objekt v datech vytvoříme nový řádek v tabulce
+                    data.forEach((item, index) => {
+
+                        console.log('Pořadí: ' + (index + 1));
+
+                        // Vytvoříme nový řádek pro tabulku
+                        const row = document.createElement('tr');
+
+                        // Získáme klíče (názvy vlastností) a hodnoty objektu
+                        const keys = Object.keys(item); // Klíče (např. ['id', 'name', 'age', 'runtime', 'director', 'genre'])
+                        const values = Object.values(item); // Hodnoty (např. [1, 'John', 30, 120, 'Spielberg', 'Drama'])
+
+                        let rozdil2 = 0; // Inicializace rozdílu mimo forEach
+
+                        // Pro každý klíč a hodnotu vytvoříme buňku v tabulce
+                        keys.forEach((key, i) => {
+                            const cell = document.createElement('td');
+                            cell.textContent = `${values[i]}`; // Zobrazí hodnotu
+
+                            // cell.textContent = `[${index + 1}][${i}] `; // Zobrazí hodnotu
+
+                            if (i === 3)
+                            {
+                               const currentTime = new Date()
+
+                               const dbTime = new Date(values[i])   
+
+                               // Získáme časový posun v minutách
+                               const timezoneOffset = dbTime.getTimezoneOffset();  // Vrátí posun v minutách, pozitivní hodnoty = východ, negativní = západ
+
+                               // Odečteme tento posun v milisekundách
+                               const correctedDate = new Date(dbTime.getTime() + timezoneOffset * 60000);
+
+                               console.log('TEST: currentTime:' + currentTime)
+                               console.log('TEST: dbTime:' + dbTime)
+
+                               console.log('TEST: correctedDate:' + correctedDate)
+
+                               rozdil = currentTime.getTime() - correctedDate.getTime()
+                               rozdil2 = rozdil/1000
+
+                               console.log("TEST: Rozdil je: " + rozdil + "[ms]")
+                               console.log("TEST: Rozdil je: " + rozdil2 + "[s]")
+   
+                            }
+
+                            // Obarvíme řádek, pokud je rozdil2 větší než 5
+                            if (rozdil2 > 60) {
+                                row.style.backgroundColor = 'yellow';
+                            }
+
+                            
+                            row.appendChild(cell);  // Přidáme buňku do řádku
+                        });
+
+                        // Přidáme řádek do těla tabulky
+                        tableBody.appendChild(row);
+                    });
+                    })
+
+                    .catch(function (error) {
+                    console.log('Chyba při načítání dat:', error);
+                    });
+                }
+
+                // Načítání dat každou sekundu
+                setInterval(loadData, 1000); // 3000ms = 3 sekundy
+
+                // První načtení dat při načtení stránky
+                loadData();
+                
+
+        </script>
+
+        
 </body>
 </html>
+
