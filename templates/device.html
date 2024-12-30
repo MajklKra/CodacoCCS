@@ -465,13 +465,13 @@
                     var panel = acc[i].nextElementSibling;
                     states.push(panel.style.maxHeight ? 'open' : 'closed');
                 }
-                localStorage.setItem('accordionState', JSON.stringify(states)); // Uložení do localStorage
+                sessionStorage.setItem('accordionState', JSON.stringify(states)); // Uložení do sessionStorage
                 console.log('Stav akordeonů uložen:', states); // Ladicí výstup
             }
 
             // Funkce pro obnovení stavu akordeonů při načtení stránky
             function loadAccordionState() {
-                var savedState = JSON.parse(localStorage.getItem('accordionState'));
+                var savedState = JSON.parse(sessionStorage.getItem('accordionState'));
                 if (savedState) {
                     console.log('Načítám stav akordeonů:', savedState); // Ladicí výstup
                     for (i = 0; i < acc.length; i++) {
