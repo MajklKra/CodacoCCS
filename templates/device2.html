@@ -140,6 +140,7 @@
         .active{
             font-weight: bold;
             /* display: block; */
+            transition: background-color 0.1s ease-out; 
         } 
 
         .accordion:after 
@@ -165,7 +166,8 @@
             color:white;
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.2s ease-out;
+            /* transition: max-height 0.2s ease-out; */
+            transition: max-height 0.1 ease-out;
         }
 
         .panel>a
@@ -243,6 +245,7 @@
         #equ:focus{
             /* border: 2px solid blue; */
             border: 2px solid #7393B3;
+            outline: none;
         }
 
         #c4{
@@ -500,7 +503,7 @@
             <div id="c1" class="col-12 col-md-4 col-lg-4 col-xl-4 col-xxl-2">
                 <h1 style="color: white; margin: 50px 0px; text-align: center;">MS Server</h1>
 
-                <button class="accordion" style="font-size:large;">Struktura instituce</button>
+                <button class="accordion" style="font-size:large;" id="stAccordion">Struktura instituce</button>
                 <div class="panel">
                     <p>Editace struktury</p>
                     <p>Editace oddělení</p>
@@ -513,7 +516,7 @@
                     <p>Kamery</p>
                 </div>
 
-                <button class="accordion" style="font-size:large;">Vazby</button>
+                <button class="accordion" style="font-size:large;" id="relationAccordion">Vazby</button>
                 <div class="panel">
                     <p>Dratové prvky</p>
                     <p>Bezdratové prvky</p>
@@ -531,13 +534,13 @@
                     Klienti
                 </div>
 
-                <button class="accordion" style="font-size:large;">Multimedia</button>
+                <button class="accordion" style="font-size:large;" id="multiAccordion">Multimedia</button>
                 <div class="panel">
                     <p>Rádia</p>
                     <p>Televize</p>
                 </div>
 
-                <button class="accordion" style="font-size:large;">Nastroje</button>
+                <button class="accordion" style="font-size:large;" id="toolAccordion">Nastroje</button>
                 <div class="panel">
                     <p>Wireless config tool</p>
                 </div>
@@ -697,6 +700,7 @@
     </div>
 
     <script>
+
         var acc = document.getElementsByClassName("accordion");
         var i;
         
@@ -711,18 +715,22 @@
             } 
           });
         }
+
     </script>
 
     <script>
+
         // Funkce pro otevření a zavření akordeonů
         function toggleAccordion(event) {
             var panel = event.target.nextElementSibling;
             if (panel.style.maxHeight) {
                 panel.style.maxHeight = null;
                 event.target.classList.remove('active');
+
             } else {
                 panel.style.maxHeight = panel.scrollHeight + "px";
                 event.target.classList.add('active');
+
             }
         }
 
@@ -732,22 +740,77 @@
             accordion.addEventListener('click', toggleAccordion);
         });
 
-        // Při načtení stránky otevřít "Hardware" akordeon
-        window.addEventListener('load', function() {
-            var hardwareAccordion = document.getElementById('hardwareAccordion');
-            if (hardwareAccordion) {
-                // Aktivujte akordeon pro "Hardware"
-                hardwareAccordion.classList.add('active');
-                var panel = hardwareAccordion.nextElementSibling;
-                panel.style.maxHeight = panel.scrollHeight + "px"; // Otevření panelu
-            }
-        });
+
+        // // Při načtení stránky otevřít "Hardware" akordeon
+        // window.addEventListener('load', function() {
+        //     var hardwareAccordion = document.getElementById('hardwareAccordion');
+        //     if (hardwareAccordion) {
+        //         // Aktivujte akordeon pro "Hardware"
+        //         hardwareAccordion.classList.add('active');
+        //         var panel = hardwareAccordion.nextElementSibling;
+        //         panel.style.maxHeight = panel.scrollHeight + "px"; // Otevření panelu
+        //     }
+        // });
+
     </script>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+
+        // document.addEventListener("DOMContentLoaded", function() 
+        // {
+        //     var acc = document.getElementsByClassName("accordion");
+        //     for (var i = 0; i < acc.length; i++) {
+        //         acc[i].addEventListener("click", function() {
+        //             this.classList.toggle("active");
+        //             var panel = this.nextElementSibling;
+        //             if (panel.style.maxHeight) {
+        //                 panel.style.maxHeight = null;
+        //             } else {
+        //                 panel.style.maxHeight = panel.scrollHeight + "px";
+        //             }
+        //         });
+        //     }
+        // });
+
+        document.addEventListener("DOMContentLoaded", function() 
+        {
+            
             var acc = document.getElementsByClassName("accordion");
-            for (var i = 0; i < acc.length; i++) {
+            var i;
+    
+            // Funkce pro ukládání stavu akordeonů
+            function saveAccordionState() {
+                var states = [];
+                for (i = 0; i < acc.length; i++) {
+                    var panel = acc[i].nextElementSibling;
+                    states.push(panel.style.maxHeight ? 'open' : 'closed');
+                }
+                localStorage.setItem('accordionState', JSON.stringify(states)); // Uložení do localStorage
+                console.log('Stav akordeonů uložen:', states); // Ladicí výstup
+            }
+    
+            // Funkce pro obnovení stavu akordeonů při načtení stránky
+            function loadAccordionState() {
+                var savedState = JSON.parse(localStorage.getItem('accordionState'));
+                if (savedState) {
+                    console.log('Načítám stav akordeonů:', savedState); // Ladicí výstup
+                    for (i = 0; i < acc.length; i++) {
+                        var panel = acc[i].nextElementSibling;
+                        if (savedState[i] === 'open') {
+                            panel.style.maxHeight = panel.scrollHeight + "px"; // Otevření panelu
+                            acc[i].classList.add("active"); // Nastavení aktivního stavu
+                        } else {
+                            panel.style.maxHeight = null; // Zavření panelu
+                            acc[i].classList.remove("active"); // Odstranění aktivního stavu
+                        }
+                    }
+                } else {
+                    console.log('Žádný uložený stav akordeonů nenalezen.'); // Ladicí výstup
+                }
+            }
+    
+            // Přidání event listeneru pro každý akordeon
+            for (i = 0; i < acc.length; i++) {
                 acc[i].addEventListener("click", function() {
                     this.classList.toggle("active");
                     var panel = this.nextElementSibling;
@@ -756,9 +819,15 @@
                     } else {
                         panel.style.maxHeight = panel.scrollHeight + "px";
                     }
+    
+                    saveAccordionState(); // Uložení stavu po každé změně
                 });
             }
+    
+            // Načtení stavu akordeonů při načtení stránky
+            loadAccordionState();
         });
+  
     </script>
 
     <script>
@@ -791,11 +860,15 @@
             // Uložení vybraného zařízení
             selectedDevice = document.getElementById('equ').value;
             console.log("Vybrané zařízení: " + selectedDevice);
+            return selectedDevice;
         }
 
         function loadData() {
 
-                saveDevice() 
+                let selectedDevice = saveDevice();
+                // saveDevice() 
+
+                console.log('loadData - vybrane zarizeni: ' + selectedDevice)
 
                 // Získání aktuálního času
                 const currentTime = new Date();
@@ -911,7 +984,6 @@
                     });
 
                     
-
                     // Přidáme řádek do těla tabulky
                     tableBody.appendChild(row);
                 });
@@ -948,19 +1020,36 @@
     </script> -->
 
     <script>
-        function handleChange(event) {
-            // Získání vybraného zařízení
-            saveDevice();
+        // function handleChange(event) 
+        // {
 
-            // Odeslání formuláře
-            document.getElementById('device-form').submit();
-        }
+        //     // Získání vybraného zařízení
+        //     saveDevice();
+
+        //     // Odeslání formuláře
+        //     document.getElementById('device-form').submit();
+        // }
 
         // function saveDevice() {
         //     // Uložení vybraného zařízení
         //     let selectedDevice = document.getElementById('equ').value;
         //     console.log("Vybrané zařízení: " + selectedDevice);
         // }
+
+
+        // Událost pro změnu výběru v select boxu
+        document.getElementById('equ').addEventListener('change', function() 
+        {
+            loadData();  // Načíst data při změně výběru
+        });
+
+        // Inicializace při načtení stránky (první načtení dat)
+        window.addEventListener('load', function() 
+        {
+            loadData();
+        });
+
+
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

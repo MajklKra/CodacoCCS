@@ -25,12 +25,6 @@
      }
 
    
-    /* table, th, td 
-    {
-        border: 1px solid black;
-        border-collapse: collapse;
-    } */
-
         table {
             border-collapse: separate;
             border-spacing: 0;
@@ -50,8 +44,6 @@
             padding: 10px; 
         }
         
-        /* tr:first-child td:first-child { border-top-left-radius: 10px; }
-        tr:first-child td:last-child { border-top-right-radius: 10px; } */
 
         tr:first-child th:first-child{ border-top-left-radius: 10px; }
         tr:first-child th:last-child { border-top-right-radius: 10px; } 
@@ -64,21 +56,7 @@
 
         tr th:first-child{border-left: solid 1px}
 
-        /* .container {
-            display: flex; /* Flexbox nastavení */
-            /* justify-content: space-between; /* Rozdělí obsah rovnoměrně */
-            /*width: 100%
-        } */
-
-        /* .box {
-            width: 45%; /* Nastavíme šířku, aby se oba divy vešly vedle sebe */
-            /* padding: 20px;
-            background-color: lightblue;
-            text-align: center;
-            border: 1px solid #ccc;
-            box-sizing: border-box; /* Zahrnuje padding do celkové šířky */
-        /* } */
-
+        
         #c1{
             background-color: #696969;
             /* width: 20%; */
@@ -359,20 +337,20 @@
             <div id="c1" class="col-12 col-md-4 col-lg-4 col-xl-4 col-xxl-2" >
                 <h1 style="color: white; margin: 50px 0px; text-align:center;">MS Server</h1>
 
-                <button class="accordion" style="font-size:large;">Struktura instituce</button>
+                <button class="accordion" style="font-size:large;" id ="a1">Struktura instituce</button>
                 <div class="panel">
                     <p>Editace struktury</p>
                     <p>Editace oddělení</p>
                 </div>
 
-                <button class="accordion" style="font-size:large;">Hardware</button>
+                <button class="accordion" style="font-size:large;" id ="a2">Hardware</button>
                 <div class="panel">
                     <a href="/device2">Diagnostika</a>
                     <p>Dveřní zámky</p>
                     <p>Kamery</p>
                 </div>
 
-                <button class="accordion" style="font-size:large;">Vazby</button>
+                <button class="accordion" style="font-size:large;" id ="a3">Vazby</button>
                 <div class="panel">
                     <p>Dratové prvky</p>
                     <p>Bezdratové prvky</p>
@@ -382,10 +360,6 @@
                     <p>Rozhraní</p>
                 </div>
 
-                <!-- <button class="accordion" style="font-size:large;"><b>Zaměstnanci</b></button>
-                <div class="panel">
-                </div> -->
-
                 <div style="padding-bottom:0px;padding-left: 50px; font-size: large; color: white;">
                     Zaměstnanci
                 </div>
@@ -394,21 +368,13 @@
                     Klienti
                 </div>
 
-                <!-- <b style="padding-left: 40px; font-size: large; color: white;">Zaměstnanci</b></br> -->
-
-                <!-- <button class="accordion" style="font-size:large;"><b>Klienti</b></button>
-                <div class="panel">
-                </div> -->
-
-                <!-- <b style="padding-left: 40px; font-size: large; color: white; padding-top:30px; padding-bottom: 30px; margin-top: 30px; margin-bottom: 30px;">Klienti</b> -->
-
-                <button class="accordion" style="font-size:large;">Multimedia</button>
+                <button class="accordion" style="font-size:large;" id ="a4">Multimedia</button>
                 <div class="panel">
                     <p>Rádia</p>
                     <p>Televize</p>
                 </div>
 
-                <button class="accordion" style="font-size:large;">Nastroje</button>
+                <button class="accordion" style="font-size:large;" id ="a5">Nastroje</button>
                 <div class="panel">
                     <p>Wireless config tool</p>
                 </div>
@@ -418,12 +384,7 @@
             <div id="c2" class="col-12 col-md-8 col-lg-8 col-xl-8 col-xxl-10">
                 <div id="c4"> 
                     <p> 
-                        <!-- <b>{{ formatted_time }} {{ current_time.strftime('%H:%M') }}   &nbsp&nbsp Uživatel: {{user.id}}</b> 
-                        &nbsp&nbsp <a href="/logout">Odhlášení</a>  -->
-
-
-                        <!-- <p id="p1" style="margin-right: 0px;"><b> </b></p> &nbsp&nbsp Uživatel: {{user.id}} &nbsp&nbsp <a href="/logout">Odhlášení</a> -->
-
+           
                         <span id="span1"> </span> <b> &nbsp&nbsp Uživatel: {{user.id}} </b> &nbsp&nbsp <a href="/logout">Odhlášení</a>
 
                     </p> 
@@ -434,30 +395,13 @@
         </div>
     </div>
 
-    <!-- <script>
-        var acc = document.getElementsByClassName("accordion");
-        var i;
-        
-        for (i = 0; i < acc.length; i++) {
-          acc[i].addEventListener("click", function() {
-            this.classList.toggle("active");
-            var panel = this.nextElementSibling;
-            if (panel.style.maxHeight) {
-              panel.style.maxHeight = null;
-            } else {
-              panel.style.maxHeight = panel.scrollHeight + "px";
-            } 
-          });
-        }
-    </script> -->
-
     <script>
         document.addEventListener("DOMContentLoaded", function() 
         {
             
             var acc = document.getElementsByClassName("accordion");
             var i;
-
+    
             // Funkce pro ukládání stavu akordeonů
             function saveAccordionState() {
                 var states = [];
@@ -468,7 +412,7 @@
                 localStorage.setItem('accordionState', JSON.stringify(states)); // Uložení do localStorage
                 console.log('Stav akordeonů uložen:', states); // Ladicí výstup
             }
-
+    
             // Funkce pro obnovení stavu akordeonů při načtení stránky
             function loadAccordionState() {
                 var savedState = JSON.parse(localStorage.getItem('accordionState'));
@@ -488,7 +432,7 @@
                     console.log('Žádný uložený stav akordeonů nenalezen.'); // Ladicí výstup
                 }
             }
-
+    
             // Přidání event listeneru pro každý akordeon
             for (i = 0; i < acc.length; i++) {
                 acc[i].addEventListener("click", function() {
@@ -499,17 +443,18 @@
                     } else {
                         panel.style.maxHeight = panel.scrollHeight + "px";
                     }
-
+    
                     saveAccordionState(); // Uložení stavu po každé změně
                 });
             }
-
+    
             // Načtení stavu akordeonů při načtení stránky
             loadAccordionState();
         });
 
     </script>
-
+    
+    
     <script>
                     
         function formatDateTimeGMT(rawDate) {
