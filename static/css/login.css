@@ -1,0 +1,242 @@
+body {
+    display: flex;
+    justify-content: center;    /* Horizontální centrování */
+    align-items: center;     /* Vertikální centrování   */
+    height: 100vh;           /* Výška stránky na 100% */
+    /* margin: 0;               Odstranění defaultního okraje */
+    flex-direction: column;  /* Uspořádání prvků vertikálně */
+    margin-top: 100px;
+    background-color: #ADD8E6 !important; 
+    font-family: 'Times New Roman', Times, serif !important
+}
+
+h2 {
+    margin-bottom: 20px; /* Mezera pod nadpisem */
+    color: blue;
+}
+
+form {
+    /* border: 1px solid #ccc;  
+    padding: 20px;             
+    border-radius: 5px;        
+    background-color: 	#F5F5F5; */
+
+    width: 100%;
+}
+
+table {
+    margin: 0 auto;           /* Centrování tabulky */
+}
+
+button {
+    margin-top: 10px;         /* Mezera nad tlačítkem */
+}
+
+.error 
+{     
+    color: #8B0000; 
+    font-weight: bold;
+    font-size:large;    
+}
+
+.success 
+{ 
+    color: green; 
+    font-weight: bold;
+}
+
+.container{
+    display: flex;
+    justify-content: center;    
+    align-items: center; 
+    flex-direction: column;
+    /* width: 30% !important; */
+    /* background-color: red; */
+}
+
+#c1{
+    display: flex;
+    justify-content: center;    
+    align-items: center; 
+    flex-direction: column;
+    width: 100% !important;
+    background-color: white;
+    border-radius: 5px;
+    /* border: 1px solid gray; */
+    border:none;
+    transform: translate(0%, -25%); /* Posunuto zpět o 50% šířky a výšky */
+}
+
+
+.row{
+    width:100%;    
+    /* background-color: green; */
+
+    display: flex;
+    justify-content: center;    
+    align-items: center; 
+    flex-direction: column;
+}
+
+#c1>h1{
+    /* background-color: red; */
+    padding: 50px 10px;
+}
+
+#username{
+    /* background-color: aliceblue; */
+    background-color: #F5F5F5;
+    /* background-color: red; */
+    /* color: gainsboro; */
+    color:#808080;
+    text-align: left;
+    padding-left: 10px;
+    font-weight: bold;
+    border: 1px solid #DCDCDC;
+    border-radius: 5px;
+}
+
+#username::placeholder{
+    padding-left: 50px;
+}
+
+#username:focus 
+{
+    color: Blue !important;
+    background-color: #A7C7E7 !important;
+    border: 2px solid #6495ED; /* Červené orámování */
+    outline: none; /* Odstranění standardního obrysu */ 
+    opacity: 0.5 !important;    
+}
+
+#password{
+    /* background-color: aliceblue; */
+    background-color: #F5F5F5;
+    /* color: gainsboro; */
+    color: #808080;
+    text-align: left;
+    padding-left: 10px;
+    font-weight: bold;
+    border: 1px solid #DCDCDC;
+}
+
+#password::placeholder{
+    padding-left: 50px;
+}
+
+#password:focus 
+{
+    color: Blue !important;
+    background-color: #A7C7E7 !important;
+    border: 2px solid #6495ED; /* Červené orámování */
+    outline: none; /* Odstranění standardního obrysu */ 
+    opacity: 0.5 !important; 
+    
+
+}
+
+/* #togglePassword{
+    color: gainsboro !important;
+} */
+
+#eyeIcon{
+    color:gainsboro;
+}
+
+#c2{
+    
+    width: 90%;
+
+    display: flex;
+    justify-content: center; 
+    align-content: center; 
+    flex-direction: column;
+}
+
+@media screen and (max-width: 300px) 
+{
+    body
+    {
+        display: none;
+    }
+}
+
+@media screen and (min-width: 301px)and (max-width: 400px) 
+{
+
+    /* body{
+        background-color: red !important
+    } */
+
+    .container{
+   
+        width: 90% !important;
+    }
+}
+    
+
+
+@media screen and (min-width: 401px) and (max-width: 575px) 
+{
+    /* body{
+        background-color: green !important
+    } */
+
+    .container
+    {
+        width: 90% !important;
+    }
+    
+}
+
+@media screen and (min-width: 576px) and (max-width: 767px) 
+{
+    /* body{
+        background-color: blue !important
+    } */
+
+    .container
+    {
+        width: 80% !important;
+    }
+}
+
+@media screen and (min-width: 767px) and (max-width: 991px) 
+{
+    /* body{
+        background-color:black !important
+    } */
+
+    .container
+    {
+        width: 70% !important;
+    }
+
+}
+
+@media screen and (min-width: 992px) and (max-width: 1199px) 
+{
+    /* body{
+        background-color:yellow !important
+    } */
+
+    .container
+    {
+        width: 60% !important;
+    }
+
+}
+
+@media screen and (min-width: 1200px)
+{
+    /* body{
+        background-color:white !important
+    }  */
+    
+    .container
+    {
+        width: 30% !important;
+    }
+
+    
+}

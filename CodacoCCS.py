@@ -13,7 +13,6 @@ from flask import jsonify
 
 import uuid
 
-
 # pocet = 0
 
 # Slouží k udržování informace o přihlášených uživatelích
@@ -349,29 +348,44 @@ def get_data():
     return jsonify(data)
 
     
-@app.route('/test')
+# @app.route('/test')
+# @role_required('admin','user')
+# def test():
+#     try:
+#         # Připojení k MySQL databázi
+#         conn = mysql.connector.connect(**db_config)
+#         cursor = conn.cursor()
+
+#         query2 = """
+#                  SELECT DeviceTypeShortCut, HwIpDevicesTypes.DeviceTypeID, MacAddressStr, IPAddressStr, LastActivity, RunTime, VersionString
+#                  FROM   HwIpDevicesAddrMem
+#                  JOIN   HwIpDevicesTypes ON HwIpDevicesTypes.DeviceTypeID = HwIpDevicesAddrMem.DeviceTypeID;
+#                  """
+        
+#         cursor.execute(query2)
+#         results = cursor.fetchall()
+
+#         # Zavření kurzoru a připojení
+#         cursor.close()
+#         conn.close()
+
+#         return render_template("test.html", devices=results)
+    
+#     except mysql.connector.Error as err:
+#         # Zpracování chyby připojení
+#         return f"Chyba připojení k databázi: {err}"
+
+@app.route('/test2')
 @role_required('admin','user')
 def test():
     try:
-        # Připojení k MySQL databázi
-        conn = mysql.connector.connect(**db_config)
-        cursor = conn.cursor()
+        current_time = datetime.now()
+        formatted_time = format_datetime(current_time, "EEEE d. MMMM yyyy", locale="cs")
+        formatted_time = formatted_time[0].upper() + formatted_time[1:]
 
-        query2 = """
-                 SELECT DeviceTypeShortCut, HwIpDevicesTypes.DeviceTypeID, MacAddressStr, IPAddressStr, LastActivity, RunTime, VersionString
-                 FROM   HwIpDevicesAddrMem
-                 JOIN   HwIpDevicesTypes ON HwIpDevicesTypes.DeviceTypeID = HwIpDevicesAddrMem.DeviceTypeID;
-                 """
-        
-        cursor.execute(query2)
-        results = cursor.fetchall()
+        # Předání dat do šablony
+        return render_template("test2.html", user=current_user, current_time=current_time, formatted_time=formatted_time)
 
-        # Zavření kurzoru a připojení
-        cursor.close()
-        conn.close()
-
-        return render_template("test.html", devices=results)
-    
     except mysql.connector.Error as err:
         # Zpracování chyby připojení
         return f"Chyba připojení k databázi: {err}"

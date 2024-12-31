@@ -1,262 +1,21 @@
 <!DOCTYPE html>
 <html lang="cs">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Přihlášení</title>
-
-    <style>
-        body {
-            display: flex;
-            justify-content: center;    /* Horizontální centrování */
-            align-items: center;     /* Vertikální centrování   */
-            height: 100vh;           /* Výška stránky na 100% */
-            /* margin: 0;               Odstranění defaultního okraje */
-            flex-direction: column;  /* Uspořádání prvků vertikálně */
-            margin-top: 100px;
-            background-color: #ADD8E6 !important; 
-            font-family: 'Times New Roman', Times, serif !important
-        }
-
-        h2 {
-            margin-bottom: 20px; /* Mezera pod nadpisem */
-            color: blue;
-        }
-
-        form {
-            /* border: 1px solid #ccc;  
-            padding: 20px;             
-            border-radius: 5px;        
-            background-color: 	#F5F5F5; */
-
-            width: 100%;
-        }
-
-        table {
-            margin: 0 auto;           /* Centrování tabulky */
-        }
-
-        button {
-            margin-top: 10px;         /* Mezera nad tlačítkem */
-        }
-
-        .error 
-        {     
-            color: #8B0000; 
-            font-weight: bold;
-            font-size:large;    
-        }
-
-        .success 
-        { 
-            color: green; 
-            font-weight: bold;
-        }
-
-        .container{
-            display: flex;
-            justify-content: center;    
-            align-items: center; 
-            flex-direction: column;
-            /* width: 30% !important; */
-            /* background-color: red; */
-        }
-
-        #c1{
-            display: flex;
-            justify-content: center;    
-            align-items: center; 
-            flex-direction: column;
-            width: 100% !important;
-            background-color: white;
-            border-radius: 5px;
-            /* border: 1px solid gray; */
-            border:none;
-            transform: translate(0%, -25%); /* Posunuto zpět o 50% šířky a výšky */
-        }
-
+    <head>
         
-        .row{
-            width:100%;    
-            /* background-color: green; */
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Přihlášení</title>
 
-            display: flex;
-            justify-content: center;    
-            align-items: center; 
-            flex-direction: column;
-        }
-
-        #c1>h1{
-            /* background-color: red; */
-            padding: 50px 10px;
-        }
-
-        #username{
-            /* background-color: aliceblue; */
-            background-color: #F5F5F5;
-            /* background-color: red; */
-            /* color: gainsboro; */
-            color:#808080;
-            text-align: left;
-            padding-left: 10px;
-            font-weight: bold;
-            border: 1px solid #DCDCDC;
-            border-radius: 5px;
-        }
-
-        #username::placeholder{
-            padding-left: 50px;
-        }
-
-        #username:focus 
-        {
-            color: Blue !important;
-            background-color: #A7C7E7 !important;
-            border: 2px solid #6495ED; /* Červené orámování */
-            outline: none; /* Odstranění standardního obrysu */ 
-            opacity: 0.5 !important;    
-        }
-
-        #password{
-            /* background-color: aliceblue; */
-            background-color: #F5F5F5;
-            /* color: gainsboro; */
-            color: #808080;
-            text-align: left;
-            padding-left: 10px;
-            font-weight: bold;
-            border: 1px solid #DCDCDC;
-        }
-
-        #password::placeholder{
-            padding-left: 50px;
-        }
-
-        #password:focus 
-        {
-            color: Blue !important;
-            background-color: #A7C7E7 !important;
-            border: 2px solid #6495ED; /* Červené orámování */
-            outline: none; /* Odstranění standardního obrysu */ 
-            opacity: 0.5 !important; 
-            
+        <link rel="stylesheet" href="/static/css/login.css">
     
-        }
-     
-        /* #togglePassword{
-            color: gainsboro !important;
-        } */
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
-        #eyeIcon{
-            color:gainsboro;
-        }
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-        #c2{
-            
-            width: 90%;
+    </head>
 
-            display: flex;
-            justify-content: center; 
-            align-content: center; 
-            flex-direction: column;
-        }
-
-        @media screen and (max-width: 300px) 
-        {
-            body
-            {
-                display: none;
-            }
-        }
-
-        @media screen and (min-width: 301px)and (max-width: 400px) 
-        {
-
-            /* body{
-                background-color: red !important
-            } */
-
-            .container{
-           
-                width: 90% !important;
-            }
-        }
-            
-        
-
-        @media screen and (min-width: 401px) and (max-width: 575px) 
-        {
-            /* body{
-                background-color: green !important
-            } */
-
-            .container
-            {
-                width: 90% !important;
-            }
-            
-        }
-
-        @media screen and (min-width: 576px) and (max-width: 767px) 
-        {
-            /* body{
-                background-color: blue !important
-            } */
-
-            .container
-            {
-                width: 80% !important;
-            }
-        }
-
-        @media screen and (min-width: 767px) and (max-width: 991px) 
-        {
-            /* body{
-                background-color:black !important
-            } */
-
-            .container
-            {
-                width: 70% !important;
-            }
-
-        }
-
-        @media screen and (min-width: 992px) and (max-width: 1199px) 
-        {
-            /* body{
-                background-color:yellow !important
-            } */
-
-            .container
-            {
-                width: 60% !important;
-            }
-
-        }
-
-        @media screen and (min-width: 1200px)
-        {
-            /* body{
-                background-color:white !important
-            }  */
-            
-            .container
-            {
-                width: 30% !important;
-            }
-
-            
-        }
-   
-    </style>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
-</head>
     <body>
+
         <form action="/login" method="POST">
             <div class="container">
                 <div class="row">
@@ -272,7 +31,7 @@
                                     style="width: 100%; border-radius: 5px; height: 50px; opacity: 0.7; padding-right: 40px;" required>
                             <button type="button" id="togglePassword" 
                                     style="position: absolute; right: 10px; top: 10px; border: none; background: none; cursor: pointer;">
-                                    <i id="eyeIcon" class="fas fa-eye"></i> <!-- <i id="eyeIcon" class="fas fa-eye" style="color: #0096FF;"></i> -->
+                                    <!-- <i id="eyeIcon" class="fas fa-eye"></i> <i id="eyeIcon" class="fas fa-eye" style="color: #0096FF;"></i> -->
                             </button>
                         </div>
                         <br>
@@ -299,72 +58,10 @@
                 </div>
             </div>
         </form>
+       
+        <script src="/static/js/login.js"></script>
 
-        <script>
-
-            const userInput = document.getElementById('username');
-            const passInput = document.getElementById('password');
-
-            const icon = document.getElementById('eyeIcon');
-        
-            // Změna textu placeholderu při zaměření
-            userInput.addEventListener('focus', () => {
-                userInput.placeholder = "";
-            });
-
-            // Změna textu placeholderu při zaměření
-            passInput.addEventListener('focus', () => {
-                passInput.placeholder = "";
-                icon.style.color = "#A7C7E7";
-            });
-
-            
-            // Obnovení původního placeholderu při odchodu z pole
-            userInput.addEventListener('blur', () => {
-                userInput.placeholder = "Uživatelské jméno ";
-            });
-
-            // Obnovení původního placeholderu při odchodu z pole
-            passInput.addEventListener('blur', () => {
-                passInput.placeholder = "Heslo ";
-                passInput.style.color = "#808080";
-                icon.style.color = "gainsboro";
-            });
-
-        </script> 
-
-        <script>
-            const passwordField = document.getElementById("password");
-            const togglePasswordButton = document.getElementById("togglePassword");
-            const eyeIcon = document.getElementById("eyeIcon");
-
-            togglePasswordButton.addEventListener("click", () => {
-                // Přepnutí typu mezi "password" a "text"
-                if (passwordField.type === "password") {
-                    passwordField.type = "text";
-                    eyeIcon.classList.remove("fa-eye"); // Odstraní ikonu oka
-                    eyeIcon.classList.add("fa-eye-slash"); // Přidá ikonu přeškrtnutého oka
-                    /*eyeIcon.style.color = "red"; */  // Změní barvu ikony
-                    // eyeIcon.style.color = gainsboro;
-                } else {
-                    passwordField.type = "password";
-                    eyeIcon.classList.remove("fa-eye-slash");
-                    eyeIcon.classList.add("fa-eye");
-                    /*eyeIcon.style.color = "#0096FF"; */ // Resetuje barvu ikony
-                    // eyeIcon.style.color = gainsboro;
-                }
-            });
-        </script> 
-
-        <script>
-            if (window.location.pathname === '/login') {
-                sessionStorage.clear();
-                console.log("SessionStorage vymazána při načtení přihlašovací stránky.");
-            }
-        </script>
-
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
     </body>
 

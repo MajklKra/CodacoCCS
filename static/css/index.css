@@ -1,0 +1,102 @@
+html,body{
+    /* background-color: blue; */
+    height: 100%;
+    margin:0
+}
+
+#c1{
+    display: flex;
+    flex-direction: column;
+    justify-content:center;
+    align-items: center;
+    text-align: center;
+    color: #7393B3;
+
+    /* background-color: red;  */
+
+    height: 90%; /* Potomek zdědí výšku rodiče */
+    width: 100%;  /* Zajistí, že vyplní i šířku */
+
+    position: relative;
+}
+
+img{
+    margin-top: 150px;
+    transform: rotate(-2deg);
+}
+
+a{
+    
+    /* all:unset; */
+
+    color: blue;
+    text-decoration: none;
+
+    text-align: right;
+
+    justify-content:start;
+    
+}
+
+/* Flexbox pro umístění přihlášení v pravém horním rohu */
+.header {
+    position: absolute;
+    top: 0;
+    right: 0;
+    /* padding: 10px; */
+    padding-top: 20px;
+    padding-right: 50px;
+    display: flex;
+    justify-content: flex-end; /* Zarovná obsah (odkaz) na pravou stranu */
+    width: 50%; /* Zajistí, že je obsah zarovnaný na celou šířku */
+    /* background-color: green; */
+}
+
+.header2 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    /* padding: 10px; */
+    padding-top: 20px;
+    padding-left: 50px;
+    display: flex;
+    justify-content: flex-start; /* Zarovná obsah (odkaz) na pravou stranu */
+    width: 50%; /* Zajistí, že je obsah zarovnaný na celou šířku */
+    /* background-color: blue;  */
+}
+
+.footer {
+    display: flex;
+    justify-content: space-between; /* Obsah bude rozprostřen mezi levou a pravou stranu */
+    align-items: center; /* Vertikálně zarovná obsah na střed */
+    color: #7393B3;
+    padding: 10px 20px; /* Odstupy uvnitř patky */
+    font-size: 14px; /* Velikost písma */
+}
+
+.footer-left {
+    padding-left: 50px;
+}
+
+.footer-right {
+    padding-right: 50px;
+}
+
+#n1{
+    text-shadow: 1px 1px 0.7px #7393B3;
+}
+
+@media screen and (min-width: 1200px)
+{
+
+    #n1{
+       position: absolute;
+       top:300px;
+    }
+
+    #p1{
+       position: absolute;
+       top:360px;
+    }
+        
+}
